@@ -1,13 +1,17 @@
-import axios from "axios"
+import axios from "axios";
 
-export const axiosInstance = axios.create({});
+const BASE_URL = process.env.REACT_APP_API_URL;
+
+export const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+});
 
 export const apiConnector = (method, url, bodyData, headers, params) => {
     return axiosInstance({
-        method:`${method}`,
-        url:`${url}`,
+        method: method,
+        url: url,
         data: bodyData ? bodyData : null,
-        headers: headers ? headers: null,
+        headers: headers ? headers : null,
         params: params ? params : null,
     });
-}
+};
