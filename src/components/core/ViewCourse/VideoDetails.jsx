@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { markLectureAsComplete } from '../../../services/operations/courseDetailsAPI';
@@ -102,7 +103,7 @@ const VideoDetails = () => {
 
     if(currentSubSectionIndex !== noOfSubSections - 1) {
         //same section ki next video me jao
-        const nextSubSectionId = courseSectionData[currentSectionIndex].subSection[currentSectionIndex + 1]._id;
+        const nextSubSectionId = courseSectionData[currentSectionIndex].subSection[currentSubSectionIndex + 1]._id;
         //next video pr jao
         navigate(`/view-course/${courseId}/section/${sectionId}/sub-section/${nextSubSectionId}`)
     }
@@ -129,7 +130,7 @@ const VideoDetails = () => {
 
     if(currentSubSectionIndex != 0 ) {
         //same section , prev video
-        const prevSubSectionId = courseSectionData[currentSectionIndex].subSection[currentSubSectionIndex - 1];
+        const prevSubSectionId = courseSectionData[currentSectionIndex].subSection[currentSubSectionIndex - 1]._id;
         //iss video par chalge jao
         navigate(`/view-course/${courseId}/section/${sectionId}/sub-section/${prevSubSectionId}`)
     }
