@@ -37,20 +37,29 @@ For engineering managers and recruiters reviewing this repository, SkillsNest de
 
 ## 📸 Sneak Peek
 
-Have a look at the application in action. *(Note to self: ensure images are loaded or update paths to hosted versions if needed)*
+Have a look at the application in action. *(Add your image links in the `src` attributes below!)*
 
+### 1. User Authentication (Login & Signup)
 <div align="center">
-  <img src="src/assets/Images/boxoffice.png" alt="Home Page" width="800" style="border-radius: 10px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);" />
-  <br/>
-  <i>Seamlessly discover your next coding adventure.</i>
+  <img src="[INSERT_LOGIN_IMAGE_LINK_HERE]" alt="Login Page" width="800" style="border-radius: 10px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);" />
 </div>
-
 <br/>
 
+### 2. Instructor Course Builder (Add Course)
 <div align="center">
-  <img src="src/assets/Images/Instructor.png" alt="Instructor Dashboard" width="800" style="border-radius: 10px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);" />
-  <br/>
-  <i>Detailed analytics and course management for instructors.</i>
+  <img src="[INSERT_ADD_COURSE_IMAGE_LINK_HERE]" alt="Add Course Features" width="800" style="border-radius: 10px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);" />
+</div>
+<br/>
+
+### 3. Instructor Analytics Dashboard
+<div align="center">
+  <img src="[INSERT_DASHBOARD_IMAGE_LINK_HERE]" alt="Instructor Dashboard" width="800" style="border-radius: 10px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);" />
+</div>
+<br/>
+
+### 4. Student Enrolled Learning Environment
+<div align="center">
+  <img src="[INSERT_STUDENT_VIEW_IMAGE_LINK_HERE]" alt="Student Dashboard" width="800" style="border-radius: 10px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);" />
 </div>
 
 ---
