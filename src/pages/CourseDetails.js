@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { buyCourse } from '../services/operations/studentFeaturesAPI.js';
 import { fetchCourseDetails } from '../services/operations/courseDetailsAPI';
 import { setCourse } from '../slices/courseSlice';
+import { addToCart } from '../slices/cartSlice';
 import GetAvgRating from '../utils/avgRating';
 import Error from "./Error"
 import ConfirmationModal from "../components/common/ConfirmationModal"
@@ -68,6 +69,10 @@ const CourseDetails = () => {
 
     const handleBuyCourse = () => {
         if (token) {
+            if (user && user?.accountType === "Instructor") {
+                toast.error("Instructor cannot buy the course");
+                return;
+            }
             buyCourse(token, [courseId], user, navigate,dispatch);
             return;
         }
@@ -155,8 +160,27 @@ const CourseDetails = () => {
                             Rs. {price}
                         </p>
 
-                        <button className='yellowButton'>Buy Now</button>
-                        <button className='blackButton'>Add to Cart</button>
+                        <button className='yellowButton' onClick={handleBuyCourse}>Buy Now</button>
+                        <button className='blackButton' onClick={
+                            () => {
+                                if (user && user?.accountType === "Instructor") {
+                                    toast.error("Instructor cannot buy the course")
+                                    return
+                                }
+                                if (token) {
+                                    dispatch(addToCart(courseData?.data?.courseDetails));
+                                    return;
+                                }
+                                setConfirmationModal({
+                                    text1:"you are not logged in",
+                                    text2:"Please login to add to cart",
+                                    btn1text:"login",
+                                    btn2Text:"cancel",
+                                    btn1Handler:()=>navigate("/login"),
+                                    btn2Handler: ()=> setConfirmationModal(null),
+                                })
+                            }
+                        }>Add to Cart</button>
                    </div>
                     
                 </div>

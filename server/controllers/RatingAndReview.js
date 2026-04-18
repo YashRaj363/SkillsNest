@@ -72,13 +72,13 @@ exports.getAverageRating = async(req,res) => {
         const result = await RatingAndReview.aggregate([
             {
                 $match: {
-                    course:courseId
+                    course: new mongoose.Types.ObjectId(courseId)
                 }
             },
             {
                 $group:{
                     _id:null,
-                    averageRating : {$avg :rating}
+                    averageRating : {$avg :"$rating"}
                 }
             }
         ])

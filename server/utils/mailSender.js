@@ -7,10 +7,12 @@ const mailSender=async(email,title,body)=>{
             auth:{
                 user:process.env.MAIL_USER,
                 pass:process.env.MAIL_PASS,
-            }
+            },
+            connectionTimeout: 10000,
+            greetingTimeout: 10000,
         })
         let info=await transporter.sendMail({
-            from:"Webzilla Classes",
+            from:`"SkillsNest" <${process.env.MAIL_USER}>`,
             to:`${email}`,
             subject:`${title}`,
             html:`${body}`,
@@ -19,7 +21,8 @@ const mailSender=async(email,title,body)=>{
         return info;
     }
     catch(error){
-        console.log(error.message);
+        console.log("Mail sending error:", error.message);
+        throw error;
     }
 }
 

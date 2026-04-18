@@ -1,5 +1,5 @@
 import React from 'react'
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux'
 import { GrFormClose } from "react-icons/gr"
@@ -13,17 +13,34 @@ const ChipInput = ({
 }) => {
     const {course, editCourse} = useSelector((state)=>state.course);
     const [chips, setChips] = useState([])
+    const inputRef = useRef(null)
 
     useEffect(() => {
       if(editCourse) {
-        setChips(JSON.parse(course?.tags))
+        const tags = course?.tags;
+        if (tags) {
+          try {
+            setChips(typeof tags === 'string' ? JSON.parse(tags) : tags)
+          } catch {
+            setChips(Array.isArray(tags) ? tags : [])
+          }
+        }
       }
-      register(name, {required:true, validate: (value)=> value.length > 0})
+      register(name, {
+        required: true,
+        validate: (value) => Array.isArray(value) && value.length > 0
+      })
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     
     useEffect(() => {
-      setValue(name, chips, { shouldValidate: true })
+      // Only trigger validation when chips array is non-empty
+      // This prevents the "Tags is required" error on initial render
+      if (chips.length > 0) {
+        setValue(name, chips, { shouldValidate: true })
+      } else {
+        setValue(name, chips)
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chips])
     
@@ -33,10 +50,20 @@ const ChipInput = ({
             const chipValue = e.target.value.trim();
 
             if(chipValue && !chips.includes(chipValue)){
-                setChips([...chips, chipValue])
+                const newChips = [...chips, chipValue];
+                setChips(newChips)
                 e.target.value = ""
             }
         }
+    }
+
+    // Auto-add any typed text that wasn't committed via Enter
+    const handleBlur = (e) => {
+      const chipValue = e.target.value.trim();
+      if (chipValue && !chips.includes(chipValue)) {
+        setChips([...chips, chipValue]);
+        e.target.value = "";
+      }
     }
 
     const handleDeleteChip = (chipIndex) => {
@@ -81,6 +108,8 @@ const ChipInput = ({
           type="text"
           placeholder={placeholder}
           onKeyDown={handleKeyDown}
+          onBlur={handleBlur}
+          ref={inputRef}
           className="form-style w-full"
         />
       </div>
@@ -94,4 +123,4 @@ const ChipInput = ({
   )
 }
 
-export default ChipInput
+export default ChipInput

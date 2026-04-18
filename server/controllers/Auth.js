@@ -46,26 +46,14 @@ exports.sendOtp = async (req,res) => {
             otp
         })
 
-        try {
-            const mailResponse = await mailSender(
-                email,
-                "Verification Email",
-                otpTemplate(otp)
-            );
-            console.log("Email sent successfully: ", mailResponse);
-        } catch (error) {
-            console.log("Error occurred while sending email: ", error);
-            return res.status(500).json({
-                success: false,
-                message: "Error occurred while sending email",
-                error: error.message,
-            });
-        }
+        // Send email in background — don't block the API response
+        mailSender(email, "Verification Email", otpTemplate(otp))
+            .then((mailResponse) => console.log("Email sent successfully: ", mailResponse))
+            .catch((error) => console.log("Error occurred while sending email: ", error));
 
         return res.status(200).json({
             success:true,
             message: "OTP sent successfully!",
-            otp
         })
     } catch (error) {
         console.log(error);
@@ -134,7 +122,7 @@ exports.signUp = async (req,res) => {
             gender:null,
             dateOfBirth: null,
             about:null,
-            contactNumer:null,
+            contactNumber:null,
         });
         
         console.log("Data received in signup is" ,firstName )
@@ -265,10 +253,10 @@ exports.changePassword = async (req, res) => {
 			{ new: true }
 		);
 
-		// Send notification email
 		try {
 			const emailResponse = await mailSender(
 				updatedUserDetails.email,
+				"Password Update Confirmation",
 				passwordUpdated(
 					updatedUserDetails.email,
 					`Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`

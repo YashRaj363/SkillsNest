@@ -15,7 +15,7 @@ exports.createSubSection = async (req,res) =>{
             });
         }
 
-        const uploadDetails = await uploadImageToCloudinary(video, process.env.FOLDER_NAME);
+        const uploadDetails = await uploadImageToCloudinary(video, process.env.FOLDER_NAME, null, null, "video");
 
         const newSubSection = await SubSection.create({
             title,
@@ -64,7 +64,10 @@ exports.updateSubSection = async (req, res) => {
         const video = req.files.video
         const uploadDetails = await uploadImageToCloudinary(
           video,
-          process.env.FOLDER_NAME
+          process.env.FOLDER_NAME,
+          null,
+          null,
+          "video"
         )
         subSection.videoUrl = uploadDetails.secure_url
         subSection.timeDuration = `${uploadDetails.duration}`

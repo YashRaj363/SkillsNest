@@ -18,7 +18,10 @@ export const getCatalogaPageData = async(categoryId) => {
   }
   catch(error) {
     console.log("CATALOG PAGE DATA API ERROR....", error);
-    toast.error(error.message);
+    // Don't show toast error if it's just a 404 (Category empty or not found)
+    if (error?.response?.status !== 404) {
+      toast.error(error.message);
+    }
     result = error.response?.data;
   }
   toast.dismiss(toastId);

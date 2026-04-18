@@ -57,7 +57,14 @@ exports.deleteAccount = async (req,res) =>{
 
         await Profile.findByIdAndDelete({_id:userDetails.additionalDetails});
 
-        //TOOD: HW unenroll user form all enrolled courses
+        // Unenroll user from all enrolled courses
+        if (userDetails && userDetails.courses) {
+            for (const courseId of userDetails.courses) {
+                await Course.findByIdAndUpdate(courseId, {
+                    $pull: { studentsEnrolled: userId }
+                })
+            }
+        }
         //delete user
         await User.findByIdAndDelete({_id:userId});
 

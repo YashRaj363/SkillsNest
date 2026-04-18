@@ -6,7 +6,7 @@ const Category = require('../models/Category');
 const { uploadImageToCloudinary } = require('../utils/imageUploader')
 require('dotenv').config();
 const CourseProgress = require("../models/CourseProgress")
-//const { convertSecondsToDuration } = require("../utils/secToDuration")
+const { convertSecondsToDuration } = require("../utils/secToDuration")
 
 exports.createCourse = async (req, res) => {
   try {
@@ -76,13 +76,13 @@ exports.createCourse = async (req, res) => {
 
 exports.showAllCourses = async (req, res) => {
   try {
-    const allCourses = Course.find({}, {
+    const allCourses = await Course.find({}, {
       courseName: true,
       price: true,
       thumbnail: true,
       instructor: true,
       ratingAndReviews: true,
-      studentsEnroled: true,
+      studentsEnrolled: true,
     }).populate("instructor").exec();
 
     return res.status(200).json({
@@ -134,9 +134,9 @@ exports.getCourseDetails = async (req, res) => {
     }
 
     let totalDurationInSeconds = 0
-    courseDetails.courseContent.forEach((content) => {
-      content.subSection.forEach((subSection) => {
-        const timeDurationInSeconds = parseInt(subSection.timeDuration)
+    courseDetails.courseContent?.forEach((content) => {
+      content.subSection?.forEach((subSection) => {
+        const timeDurationInSeconds = parseInt(subSection.timeDuration) || 0
         totalDurationInSeconds += timeDurationInSeconds
       })
     })
@@ -185,13 +185,12 @@ exports.editCourse = async (req, res) => {
 
     // Update only the fields that are present in the request body
     for (const key in updates) {
-      if (updates.hasOwnProperty(key)) {
-        course[key] = updates[key]
-        // if (key === "tag" || key === "instructions") {
-        //   course[key] = JSON.parse(updates[key])
-        // } else {
-        //   course[key] = updates[key]
-        // }
+      if (Object.prototype.hasOwnProperty.call(updates, key)) {
+        if (key === "tag" || key === "tags" || key === "instructions") {
+          course[key] = typeof updates[key] === "string" ? JSON.parse(updates[key]) : updates[key]
+        } else {
+          course[key] = updates[key]
+        }
       }
     }
 
@@ -276,9 +275,9 @@ exports.getFullCourseDetails = async (req, res) => {
     // }
 
     let totalDurationInSeconds = 0
-    courseDetails.courseContent.forEach((content) => {
-      content.subSection.forEach((subSection) => {
-        const timeDurationInSeconds = parseInt(subSection.timeDuration)
+    courseDetails.courseContent?.forEach((content) => {
+      content.subSection?.forEach((subSection) => {
+        const timeDurationInSeconds = parseInt(subSection.timeDuration) || 0
         totalDurationInSeconds += timeDurationInSeconds
       })
     })

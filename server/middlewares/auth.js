@@ -4,7 +4,7 @@ const User=require("../models/User");
 
 exports.auth=async(req,res,next)=>{
     try{
-        const token=req.cookies.token || req.body.token || req.header("Authorization")?.replace("Bearer ","");
+        const token=req.cookies?.token || req.body?.token || req.headers?.authorization?.replace("Bearer ","");
         if(!token){
             return res.status(400).json({
                 success:false,
@@ -13,7 +13,7 @@ exports.auth=async(req,res,next)=>{
         }
         try{
             const decode=jwt.verify(token,process.env.JWT_SECRET);
-            console.log(decode);
+            // console.log(decode);
             req.user=decode;
         }
         catch(error){
@@ -27,7 +27,8 @@ exports.auth=async(req,res,next)=>{
     catch(error){
         return res.status(401).json({
             success:false,
-            message:"Something went wrong"
+            message:"Something went wrong while verifying token",
+            error: error.message
         })
     }
 }
@@ -37,7 +38,7 @@ exports.isStudent=async(req,res,next)=>{
         if(req.user.accountType !== "Student"){
             return res.status(401).json({
                 success:false,
-                message:"THis is protected route for student",
+                message:"This is a protected route for Students",
             })
         }
         next();
@@ -55,7 +56,7 @@ exports.isInstructor=async(req,res,next)=>{
         if(req.user.accountType !== "Instructor"){
             return res.status(401).json({
                 success:false,
-                message:"THis is protected route for Instructor",
+                message:"This is a protected route for Instructors",
             })
         }
         next();

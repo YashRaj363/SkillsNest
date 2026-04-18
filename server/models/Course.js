@@ -28,7 +28,7 @@ const courseSchema=new mongoose.Schema(
         ratingAndReviews:[
             {
                 type:mongoose.Schema.Types.ObjectId,
-                ref:"ratingAndReview"
+                ref:"RatingAndReview"
             }
         ],
         price:{
@@ -58,7 +58,8 @@ const courseSchema=new mongoose.Schema(
             type: String,
             enum: ["Draft", "Published"]
         }
-    }
+    },
+    { timestamps: true }
 );
 
 module.exports=mongoose.model("Course",courseSchema);

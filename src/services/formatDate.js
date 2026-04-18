@@ -1,5 +1,6 @@
 // Returns formatted date and time
 export const formatDate = (dateString) => {
+    if (!dateString) return "N/A"
     const options = { year: "numeric", month: "long", day: "numeric" }
     const date = new Date(dateString)
     const formattedDate = date.toLocaleDateString("en-US", options)

@@ -54,7 +54,7 @@ exports.capturePayment = async (req, res) => {
     const options = {
         amount: totalAmount * 100,
         currency,
-        receipt: Math.random(Date.now()).toString()
+        receipt: `${Date.now()}_${Math.random().toString().slice(2,8)}`
     }
 
     try {
@@ -90,16 +90,19 @@ exports.verifyPayment = async (req,res) => {
 
     if (expectedSignature === razorpay_signature) {
         
-        await enrollStudents(courses, userId, res);
-
-        return res.status(200).json({success:true, message:"Payment Verified"});
+        try {
+            await enrollStudents(courses, userId);
+            return res.status(200).json({success:true, message:"Payment Verified"});
+        } catch (error) {
+            return res.status(500).json({success:false, message: error.message});
+        }
     }
     return res.status(200).json({success:"false", message:"Payment Failed"});
 }
 
-const enrollStudents = async (courses, userId, res) => {
+const enrollStudents = async (courses, userId) => {
     if (!courses || !userId) {
-        return res.status(400).json({success:false,message:"Please Provide data for Courses or UserId"});
+        throw new Error("Please Provide data for Courses or UserId");
     }
 
     for(const courseId of courses) {
@@ -112,7 +115,7 @@ const enrollStudents = async (courses, userId, res) => {
                 }, {new:true})  
 
             if (!updatedCourse) {
-                return res.status(500).json({success:false,message:"Course not Found"});
+                throw new Error("Course not Found");
             }
 
             const courseProgress = await CourseProgress.create({
@@ -135,7 +138,7 @@ const enrollStudents = async (courses, userId, res) => {
             )
         } catch (error) {
             console.log(error);
-            return res.status(500).json({success:false, message:error.message});
+            throw new Error(error.message);
         }
     }
 }

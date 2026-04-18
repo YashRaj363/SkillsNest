@@ -89,7 +89,7 @@ const CourseDetailsCard = ({course, setConfirmationModal, handleBuyCourse}) => {
             </p>
             <div className='flex flex-col gap-3 text-sm text-caribbeangreen-100'>
                 {
-                    JSON.parse(course?.instructions).map((item, index)=> (
+                    (typeof course?.instructions === 'string' ? JSON.parse(course?.instructions) : course?.instructions || []).map((item, index)=> (
                         <p key={index} className='flex gap-2'>
                            <BiSolidRightArrow/>
                             <span>{item}</span>

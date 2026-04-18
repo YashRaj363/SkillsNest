@@ -16,14 +16,28 @@ const RequirementField = ({
     useEffect(() => { 
       if(editCourse){
         // console.log("In requirements field, 1st render, editCourse=true course is",course)
-        setRequirementsList(JSON.parse(course?.instructions));
+        const instructions = course?.instructions;
+        if (instructions) {
+          try {
+            setRequirementsList(typeof instructions === 'string' ? JSON.parse(instructions) : instructions)
+          } catch {
+            setRequirementsList(Array.isArray(instructions) ? instructions : [])
+          }
+        }
       }
-      register(name, {required:true, validate: (value)=> value.length > 0 })
+      register(name, {
+        required: true,
+        validate: (value) => Array.isArray(value) && value.length > 0
+      })
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
-        setValue(name, requirementsList, { shouldValidate: true })
+        if (requirementsList.length > 0) {
+          setValue(name, requirementsList, { shouldValidate: true })
+        } else {
+          setValue(name, requirementsList)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [requirementsList])
     
